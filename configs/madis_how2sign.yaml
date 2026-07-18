@@ -1,0 +1,36 @@
+NAME: madis_how2sign
+ACCELERATOR: gpu
+NUM_NODES: 1
+DEVICE: [0, 1, 2, 3]
+
+TRAIN:
+  STAGE: lm_instruct
+  BATCH_SIZE: 64
+  END_EPOCH: 150
+  PRETRAINED: experiments/madis/pretrained.ckpt
+  PRETRAINED_VAE: experiments/madis/tokenizer.ckpt
+  OPTIM:
+    params:
+      lr: 5e-4
+
+EVAL:
+  BATCH_SIZE: 8
+
+TEST:
+  CHECKPOINTS: experiments/madis/sft_how2sign.ckpt
+  BATCH_SIZE: 8
+
+DATASET:
+  H2S:
+    DATASET_NAME: how2sign
+    ROOT: ../data/How2Sign
+    CSL_ROOT: ../data/CSL-Daily
+    PHOENIX_ROOT: ../data/Phoenix_2014T
+    MEAN_PATH: ../data/CSL-Daily/mean.pt
+    STD_PATH: ../data/CSL-Daily/std.pt
+    MAX_MOTION_LEN: 400
+    MIN_MOTION_LEN: 40
+    UNIT_LEN: 4
+
+LOGGER:
+  VAL_EVERY_STEPS: 2

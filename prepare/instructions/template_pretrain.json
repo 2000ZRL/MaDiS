@@ -1,0 +1,8 @@
+{
+  "Text-Sign Pair": {
+    "pretraining": {
+      "input": ["<Caption_Placeholder>"],
+      "output": ["<Motion_Placeholder>"]
+    }
+  }
+}

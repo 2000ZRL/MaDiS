@@ -1,0 +1,4 @@
+target: mGPT.archs.madis.MaDiSLanguageModel
+params:
+  model_path: ./deps/Qwen3-0.6B-Base-en-zh-de
+  stage: ${TRAIN.STAGE}

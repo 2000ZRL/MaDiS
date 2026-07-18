@@ -1,0 +1,76 @@
+SEED_VALUE: 1234
+DEBUG: false
+PRECISION: 32-true
+ACCELERATOR: gpu
+NUM_NODES: 1
+DEVICE: [0]
+
+TRAIN:
+  STAGE: lm_instruct
+  SPLIT: train
+  NUM_WORKERS: 16
+  BATCH_SIZE: 8
+  END_EPOCH: 200
+  RESUME: ''
+  PRETRAINED_VAE: ''
+  PRETRAINED: ''
+  OPTIM:
+    target: AdamW
+    params:
+      lr: 2e-4
+      betas: [0.9, 0.99]
+      weight_decay: 0.0
+  LR_SCHEDULER:
+    target: CosineAnnealingLR
+    params:
+      T_max: ${TRAIN.END_EPOCH}
+      eta_min: 1e-6
+
+EVAL:
+  SPLIT: val
+  BATCH_SIZE: 16
+  NUM_WORKERS: 16
+
+TEST:
+  CHECKPOINTS: ''
+  SPLIT: test
+  BATCH_SIZE: 16
+  NUM_WORKERS: 16
+  SAVE_PREDICTIONS: false
+  REPLICATION_TIMES: 1
+  REP_I: 0
+
+model:
+  target: mGPT.models.madis.MaDiS
+  params:
+    stage: ${TRAIN.STAGE}
+    lm: ${lm.madis}
+    motion_vae: ${vq.re96}
+    hand_vae_cfg: ${vq.hand192}
+    rhand_vae_cfg: ${vq.hand192}
+    metrics_dict: ${METRIC.TYPE}
+
+LOSS:
+  LAMBDA_CLS: 1.0
+  LAMBDA_RECONS: 0.5
+  LAMBDA_RECONS_LAT: 0.5
+
+METRIC:
+  TYPE: [GenerationMetrics]
+
+DATASET:
+  target: mGPT.data.H2S.H2SDataModule
+  CODE_PATH: TOKENS_h2s_csl_phoenix
+
+LOGGER:
+  VAL_EVERY_STEPS: 10
+  TYPE: [wandb]
+  WANDB:
+    target: pytorch_lightning.loggers.WandbLogger
+    params:
+      project: PROJECT
+      offline: false
+      id: null
+      version: ''
+      name: ${NAME}
+      save_dir: ${FOLDER_EXP}

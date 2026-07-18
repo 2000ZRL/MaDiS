@@ -1,0 +1,8 @@
+{
+  "Text-to-Sign": {
+    "generation": {
+      "input": ["<Caption_Placeholder>"],
+      "output": ["<Motion_Placeholder>"]
+    }
+  }
+}

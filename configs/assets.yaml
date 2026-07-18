@@ -1,0 +1,5 @@
+CONFIG_FOLDER: configs
+FOLDER: experiments
+
+TEST:
+  FOLDER: results # Testing files saving path

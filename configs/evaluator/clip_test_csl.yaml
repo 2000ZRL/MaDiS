@@ -1,0 +1,28 @@
+NAME: clip_test_csl
+ACCELERATOR: gpu
+NUM_NODES: 1
+DEVICE: [0]
+
+TRAIN:
+  STAGE: lm_clip
+  PRETRAINED_VAE: experiments/madis/tokenizer.ckpt
+
+TEST:
+  CHECKPOINTS: experiments/madis/siclip.ckpt
+  BATCH_SIZE: 45
+
+DATASET:
+  H2S:
+    DATASET_NAME: csl
+    ROOT: ../data/How2Sign
+    CSL_ROOT: ../data/CSL-Daily
+    PHOENIX_ROOT: ../data/Phoenix_2014T
+    MEAN_PATH: ../data/CSL-Daily/mean.pt
+    STD_PATH: ../data/CSL-Daily/std.pt
+    MAX_MOTION_LEN: 400
+    MIN_MOTION_LEN: 40
+    UNIT_LEN: 4
+    pred_data_dir: results/madis/madis_csl
+
+METRIC:
+  TYPE: [CLIPMetrics]

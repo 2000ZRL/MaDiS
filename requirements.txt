@@ -1,0 +1,33 @@
+tensorboard
+pytorch_lightning==2.4.0
+torchmetrics
+omegaconf
+shortuuid
+# chumpy@git+https://github.com/mattloper/chumpy --no-build-isolation
+transformers==4.51.0
+diffusers
+einops
+wandb
+rich==13.8.1
+matplotlib
+accelerate
+
+# for visualization
+smplx==0.1.28
+trimesh==3.9.24
+joblib==1.2.0
+h5py
+scikit-image
+spacy
+ftfy
+more-itertools
+natsort
+pyrender
+moviepy==1.0.3
+librosa
+# triangle==20220202
+# triangle@git+https://github.com/drufat/triangle.git
+tqdm
+nltk
+peft
+pandas

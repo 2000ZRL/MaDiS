@@ -1,0 +1,35 @@
+NAME: madis_pretrain
+ACCELERATOR: gpu
+NUM_NODES: 1
+DEVICE: [0, 1, 2, 3]
+
+TRAIN:
+  STAGE: lm_pretrain
+  BATCH_SIZE: 64
+  END_EPOCH: 200
+  PRETRAINED_VAE: experiments/madis/tokenizer.ckpt
+
+EVAL:
+  BATCH_SIZE: 8
+
+DATASET:
+  H2S:
+    DATASET_NAME: combined
+    ROOT: ../data/How2Sign
+    CSL_ROOT: ../data/CSL-Daily
+    PHOENIX_ROOT: ../data/Phoenix_2014T
+    MEAN_PATH: ../data/CSL-Daily/mean.pt
+    STD_PATH: ../data/CSL-Daily/std.pt
+    MAX_MOTION_LEN: 400
+    MIN_MOTION_LEN: 40
+    UNIT_LEN: 4
+
+METRIC:
+  TYPE: []
+
+LOSS:
+  LAMBDA_RECONS: 1.0
+  LAMBDA_RECONS_LAT: 1.0
+
+LOGGER:
+  VAL_EVERY_STEPS: 25
