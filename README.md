@@ -25,7 +25,7 @@ We use [How2Sign](https://how2sign.github.io/), [CSL-Daily](http://home.ustc.edu
 We provide checkpoints for the pretrained and fine-tuned models, along with the tokenizer (the same as SOKE), SiCLIP, and the preprocessed language model (Qwen3-0.6B-Base). We also provide the required assets, including the SMPL-X models and the mean and standard deviation of the pose data. All files can be downloaded from our Hugging Face [repository](https://huggingface.co/2000zrl/MaDiS/tree/main).
 
 | Item | Path |
-|---|---|
+|:---|:---|
 | Tokenizer | `experiments/madis/tokenizer.ckpt` |
 | Pretrained Model | `experiments/madis/pretrained.ckpt` |
 | Fine-tuned Model (CSL-Daily) | `experiments/madis/sft_csl.ckpt` |
