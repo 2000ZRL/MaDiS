@@ -57,12 +57,12 @@ python train.py --cfg configs/madis_how2sign.yaml --nodebug
 ## Evaluation
 
 ```bash
-python test.py --cfg configs/madis_csl.yaml --nodebug TEST.SAVE_PREDICTIONS=True
-python test.py --cfg configs/madis_phoenix.yaml --nodebug TEST.SAVE_PREDICTIONS=True
-python test.py --cfg configs/madis_how2sign.yaml --nodebug TEST.SAVE_PREDICTIONS=True
+python test.py --cfg configs/madis_csl.yaml --nodebug
+python test.py --cfg configs/madis_phoenix.yaml --nodebug
+python test.py --cfg configs/madis_how2sign.yaml --nodebug
 ```
 
-For SiCLIP evaluation and [visualization](https://github.com/2000ZRL/SOKE/tree/main#visualizations), please set `TEST.SAVE_PREDICTIONS` in the config to `True`.
+For SiCLIP evaluation and [visualization](https://github.com/2000ZRL/SOKE/tree/main#visualizations), please set `TEST.SAVE_PREDICTIONS` in the above config to `True`.
 Then run the SiCLIP evaluator:
 
 ```bash
