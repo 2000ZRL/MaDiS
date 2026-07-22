@@ -153,10 +153,8 @@ class MaDiS(BaseModel):
                 pose_body[..., 10 * self.dim_per_joint:],
             ], dim=-1)
 
-            frame_mask = masked_motion.unsqueeze(-1).expand(
-                -1, -1, 4).reshape(masked_motion.shape[0], -1)
-            outputs["recons_motions"] = reconstructed[frame_mask]
-            outputs["gt_motions"] = batch["motion"][frame_mask]
+            outputs["recons_motions"] = reconstructed
+            outputs["gt_motions"] = batch["motion"]
 
             masked_tokens = tokens[masked_motion].long()
             outputs["gt_latent"] = torch.cat([
