@@ -54,6 +54,9 @@ class MaskedDiffusionLanguageModel(nn.Module):
         self.pad_idx = pad_idx
         self.eos_idx = eos_idx
         self.mask_idx = mask_idx
+        if self.pad_idx != self.eos_idx:
+            raise ValueError(
+                "MaDiS length supervision requires PAD and EOS to share an ID")
         self.stage = stage
         self.pretraining = stage == "lm_pretrain"
 
@@ -300,34 +303,17 @@ class MaskedDiffusionLanguageModel(nn.Module):
         logits_body, logits_lhand, logits_rhand, hidden_states = self._get_logits(
             prompt_ids, noisy_inputs, attention_mask)
 
-        if decoder_attention_mask is None:
-            motion_valid = torch.ones_like(labels, dtype=torch.bool)
-        else:
-            motion_valid = decoder_attention_mask.to(device=device, dtype=torch.bool)
-        valid_positions = (
-            torch.cat([attention_mask.to(torch.bool), motion_valid], dim=1)
-            if self.pretraining else motion_valid
-        )
-        position_ids = torch.arange(
-            target_body.shape[1], device=device).unsqueeze(0)
-        text_positions = position_ids < text_length if self.pretraining else None
+        # Keep the checkpoint-era length objective: the supplied Qwen
+        # tokenizer uses the same embedding ID for PAD and EOS, and padded
+        # target positions are deliberately denoised as EOS.  In particular,
+        # decoder_attention_mask must not remove the padded tail from this
+        # loss.  Generation later uses the first predicted EOS as the stream
+        # boundary.
+        del decoder_attention_mask
         loss_function = CrossEntropyLoss(reduction="none")
 
-        def masked_loss(logits, targets, part):
-            selected_target_logits = logits.gather(
-                -1, targets.unsqueeze(-1)).squeeze(-1)
-            supported = torch.isfinite(selected_target_logits)
-            code_lookup = torch.zeros(
-                logits.shape[-1], dtype=torch.bool, device=device)
-            code_lookup[torch.as_tensor(
-                self.id_dict[part][:-3], dtype=torch.long, device=device)] = True
-            valid_codes = code_lookup[targets]
-            if self.pretraining and part == "body":
-                valid_codes = valid_codes | text_positions
-            elif self.pretraining:
-                valid_codes = valid_codes & ~text_positions
-            valid = valid_positions & supported & valid_codes
-            selected = mask_indices & valid
+        def masked_loss(logits, targets):
+            selected = mask_indices
             if not selected.any():
                 finite = torch.where(
                     torch.isfinite(logits), logits, torch.zeros_like(logits))
@@ -335,12 +321,12 @@ class MaskedDiffusionLanguageModel(nn.Module):
             weighted = loss_function(
                 logits[selected], targets[selected]
             ) / mask_probability[selected].clamp_min(1e-6)
-            return weighted.sum() / valid.sum().clamp_min(1)
+            return weighted.sum() / targets.numel()
 
         return {
-            "loss": masked_loss(logits_body, target_body, "body"),
-            "loss_hand": masked_loss(logits_lhand, target_lhand, "lhand"),
-            "loss_rhand": masked_loss(logits_rhand, target_rhand, "rhand"),
+            "loss": masked_loss(logits_body, target_body),
+            "loss_hand": masked_loss(logits_lhand, target_lhand),
+            "loss_rhand": masked_loss(logits_rhand, target_rhand),
             "hidden_states": hidden_states,
             "text_len": text_length,
             "mask_indices": mask_indices,

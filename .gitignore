@@ -23,6 +23,8 @@ wandb/
 .vscode/
 slurm
 slurm/
+tests
+tests/
 
 *.csv
 *.zip
