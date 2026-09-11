@@ -18,7 +18,7 @@ pip install -r requirements.txt
 ```
 
 ## Data
-We use [How2Sign](https://how2sign.github.io/), [CSL-Daily](http://home.ustc.edu.cn/~zhouh156/dataset/csl-daily/), and [Phoenix-2014T](https://www-i6.informatik.rwth-aachen.de/~koller/RWTH-PHOENIX-2014-T/) to evaluate our models. The pose data and split files are the same as those used in [SOKE](https://github.com/2000ZRL/SOKE/tree/main#data). Pleas make sure to extract [sign tokens](https://github.com/2000ZRL/SOKE/blob/main/scripts/get_motion_code.py) before training or testing models.
+We use [How2Sign](https://how2sign.github.io/), [CSL-Daily](http://home.ustc.edu.cn/~zhouh156/dataset/csl-daily/), and [Phoenix-2014T](https://www-i6.informatik.rwth-aachen.de/~koller/RWTH-PHOENIX-2014-T/) to evaluate our models. The pose data and split files are the same as those used in [SOKE](https://github.com/2000ZRL/SOKE/tree/main#data), and we have provided pre-extracted sign tokens as shown below.
 
 
 ## Models and Assets
@@ -35,6 +35,7 @@ We provide checkpoints for the pretrained and fine-tuned models, along with the 
 | Language Model | `deps/Qwen3-0.6B-Base-en-zh-de` |
 | SMPL-X Model | `deps/smpl_models` |
 | Mean/Std of Pose Data | `../data/CSL-Daily/<mean or std>.pt` |
+| Pre-extracted Sign Tokens | `../data/How2Sign/TOKENS_h2s_csl_phoenix` |
 
 
 ## Training
